@@ -35,7 +35,12 @@ export class UserRepository extends BaseRepository<User> {
                 orderDirection = DEFAULT_ORDER_DIRECTION,
                 name = '',
             } = query;
-
+            // console.log(keyword)
+            // console.log(page)
+            // console.log(limit)
+            // console.log(orderBy)
+            // console.log(orderDirection)
+            // console.log(name)
             const matchQuery: FilterQuery<User> = {};
             matchQuery.$and = [
                 {

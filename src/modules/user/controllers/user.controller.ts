@@ -51,7 +51,7 @@ export class UserController extends BaseController {
         @Body(new TrimBodyPipe(), new JoiValidationPipe())
         dto: CreateUserDto,
     ) {
-        // console.log(dto)
+         //console.log(dto)
         try {
             const result = await this.userService.createUser(dto);
             //console.log(new SuccessResponse(result))
@@ -155,9 +155,9 @@ export class UserController extends BaseController {
         @Query(new JoiValidationPipe())
         query: GetUserListQuery,
     ) {
+        //console.log(query)
         try {
-            const result =
-                await this.userService.findAllAndCountUserByQuery(query);
+            const result =await this.userService.findAllAndCountUserByQuery(query);
             return new SuccessResponse(result);
         } catch (error) {
             this.handleError(error);

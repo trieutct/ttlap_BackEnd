@@ -9,20 +9,66 @@ export class CreateUserDto {
     @ApiProperty({
         type: String,
         maxLength: INPUT_TEXT_MAX_LENGTH,
-        default: 'User name',
+        default: 'name',
     })
     @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
     name: string;
-}
-
-export class UpdateUserDto {
+    
     @ApiProperty({
         type: String,
         maxLength: INPUT_TEXT_MAX_LENGTH,
         default: 'User name',
     })
     @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
+    username: string;
+
+    @ApiProperty({
+        type: String,
+        maxLength: INPUT_TEXT_MAX_LENGTH,
+        default: '',
+    })
+    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
+    password: string;
+
+    @ApiProperty({
+        type: Boolean, // Thay đổi kiểu dữ liệu thành Boolean
+        default: false, // Giá trị mặc định cho kiểu boolean
+    })
+    @JoiValidate(Joi.boolean().required())
+    role: boolean;
+}
+
+export class UpdateUserDto {
+    @ApiProperty({
+        type: String,
+        maxLength: INPUT_TEXT_MAX_LENGTH,
+        default: 'name',
+    })
+    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
     name: string;
+    
+    @ApiProperty({
+        type: String,
+        maxLength: INPUT_TEXT_MAX_LENGTH,
+        default: 'User name',
+    })
+    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
+    username: string;
+
+    @ApiProperty({
+        type: String,
+        maxLength: INPUT_TEXT_MAX_LENGTH,
+        default: '',
+    })
+    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
+    password: string;
+
+    @ApiProperty({
+        type: Boolean, // Thay đổi kiểu dữ liệu thành Boolean
+        default: false, // Giá trị mặc định cho kiểu boolean
+    })
+    @JoiValidate(Joi.boolean().required())
+    role: boolean;
 }
 
 export class GetUserListQuery extends CommonListQuery {

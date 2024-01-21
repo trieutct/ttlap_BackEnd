@@ -23,7 +23,9 @@ export class UserService extends BaseService<User, UserRepository> {
             const user: SchemaCreateDocument<User> = {
                 ...(dto as any),
             };
-            return await this.userRepository.createOne(user);
+            const res= await this.userRepository.createOne(user)
+            // console.log(res)
+            return res;
         } catch (error) {
             this.logger.error('Error in UserService createUser: ' + error);
             throw error;

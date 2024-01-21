@@ -1,6 +1,6 @@
 export const createUserSuccessResponseExample = {
     createdAt: Date.now.toString(),
-    updatedAt: '2024-01-10T10:46:42.037Z',
+    updatedAt: Date.now.toString(),
     deletedAt: null,
     deletedBy: null,
     updatedBy: null,

@@ -31,6 +31,7 @@ export class BaseRepository<T extends MongoBaseSchema> {
         options?: CreateOptions & { aggregateErrors?: true },
     ): Promise<HydratedDocument<SchemaDocument<T>>> {
         try {
+            //console.log(data)
             if (options) {
                 return (await this.model.create([data], options))?.[0];
             } else {
