@@ -7,6 +7,7 @@ import {
     Delete,
     Get,
     Query,
+    UseGuards,
 } from '@nestjs/common';
 import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
 import { HttpStatus, mongoIdSchema } from '@/common/constants';
@@ -14,6 +15,7 @@ import {
     CreateUserDto,
     GetUserListQuery,
     UpdateUserDto,
+    loginUserDto,
 } from '../user.interface';
 import {
     ApiResponseError,
@@ -34,6 +36,7 @@ import { toObjectId } from '@/common/helpers/commonFunctions';
 import { BaseController } from '@/common/base/base.controller';
 import { JoiValidationPipe } from '@/common/pipe/joi.validation.pipe';
 import { UserService } from '../services/user.service';
+import { AuthGuard } from '@/modules/auth/auth.guard';
 
 @ApiTags('User APIs')
 @Controller('user')
@@ -147,6 +150,7 @@ export class UserController extends BaseController {
             this.handleError(error);
         }
     }
+    @UseGuards(AuthGuard)
     @ApiOperation({ summary: 'Get User list' })
     @ApiResponseError([SwaggerApiType.GET_LIST])
     @ApiResponseSuccess(getUserListSuccessResponseExample)
@@ -159,6 +163,36 @@ export class UserController extends BaseController {
         try {
             const result =await this.userService.findAllAndCountUserByQuery(query);
             return new SuccessResponse(result);
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
+
+
+
+
+    @ApiOperation({ summary: 'Login User' })
+    @ApiBody({ type: loginUserDto })
+    @Post('login')
+    async loginUser(
+        @Body(new TrimBodyPipe(), new JoiValidationPipe())
+        dto: loginUserDto,
+    ) {
+        // console.log(dto)
+        try {
+            const result = await this.userService.loginUser(dto);
+            if (!result) {
+                return new ErrorResponse(
+                    HttpStatus.ITEM_NOT_FOUND,
+                    this.translate('Username and password not found', {
+                        args: {
+                            dto,
+                        },
+                    }),
+                );
+            }
+            return result
         } catch (error) {
             this.handleError(error);
         }

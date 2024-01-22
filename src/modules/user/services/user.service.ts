@@ -1,19 +1,22 @@
 import { BaseService } from '@/common/base/base.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import {
     CreateUserDto,
     GetUserListQuery,
     UpdateUserDto,
+    loginUserDto,
 } from '../user.interface';
 
 import { User } from '@/database/schemas/user.schema';
 import { UserRepository } from '../user.repository';
 import { UserAttributesForDetail } from '../user.constant';
+import { JwtService } from '@nestjs/jwt';
+import  {jwtConstants}  from '@/modules/auth/constants';
 
 @Injectable()
 export class UserService extends BaseService<User, UserRepository> {
-    constructor(private readonly userRepository: UserRepository) {
+    constructor(private readonly userRepository: UserRepository,private jwtService: JwtService) {
         super(userRepository);
     }
 
@@ -72,6 +75,26 @@ export class UserService extends BaseService<User, UserRepository> {
         } catch (error) {
             this.logger.error(
                 'Error in UserService findAllAndCountUserByQuery: ' + error,
+            );
+            throw error;
+        }
+    }
+
+
+    async loginUser(dto:loginUserDto)
+    {
+        try{
+            const data=await this.userRepository.findOne(dto);
+            if(!data)
+                return null
+            const access_token=await this.jwtService.signAsync({data},{
+                secret:jwtConstants.secret,
+                expiresIn: jwtConstants.expiresIn,
+            });
+            return access_token;
+        }catch (error) {
+            this.logger.error(
+                'Error in UserService loginUser: ' + error,
             );
             throw error;
         }

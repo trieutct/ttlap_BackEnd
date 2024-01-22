@@ -90,4 +90,17 @@ export class BaseRepository<T extends MongoBaseSchema> {
             lang: I18nContext?.current?.()?.lang ?? DEFAULT_LANGUAGE,
         });
     }
+
+
+    async findOne(filter: FilterQuery<SchemaDocument<T>>) {
+        try {
+            return this.model.findOne({
+                ...filter,
+                ...softDeleteCondition,
+            });
+        } catch (error) {
+            this.logger.error(`Error in BaseRepository findOne: ${error}`);
+            throw error;
+        }
+    }
 }
