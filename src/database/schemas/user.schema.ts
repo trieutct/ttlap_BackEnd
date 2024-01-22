@@ -1,6 +1,6 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { MongoBaseSchema } from './base.schema';
-import { MongoCollection } from '../utils/constants';
+import { MongoCollection,RoleCollection } from '../utils/constants';
 import { createSchemaForClass } from '../utils/helper';
 export type UserDocument = SchemaDocument<User>;
 @Schema({
@@ -23,8 +23,8 @@ export class User extends MongoBaseSchema {
     @Prop({ required: true, type: String })
     password: string;
 
-    @Prop({ required: true, type: Boolean })
-    role: boolean;
+    @Prop({ required: true, type: String,default:RoleCollection.USERS })
+    role: string;
 }
 const UserSchema = createSchemaForClass(User);
 

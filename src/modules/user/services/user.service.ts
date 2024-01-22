@@ -91,7 +91,14 @@ export class UserService extends BaseService<User, UserRepository> {
                 secret:jwtConstants.secret,
                 expiresIn: jwtConstants.expiresIn,
             });
-            return access_token;
+            const refresh_token=await this.jwtService.signAsync({data},{
+                secret:jwtConstants.secret,
+                expiresIn: jwtConstants.refresh_expiresIn,
+            });
+            return {
+                access_token:access_token,
+                refresh_token:refresh_token
+            };
         }catch (error) {
             this.logger.error(
                 'Error in UserService loginUser: ' + error,

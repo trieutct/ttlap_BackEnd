@@ -8,6 +8,7 @@ import { HttpExceptionFilter } from './common/exceptions.filter';
 import { MongoModule } from './common/services/mongo.service';
 import { CommonModule } from './modules/common/common.module';
 import { UserModule } from './modules/user/user.module';
+import { ProductModule } from './modules/prouduct/product.module';
 import { TransformInterceptor } from './modules/common/transform.interceptor';
 import { HeaderMiddleware } from './modules/middleware/header.middleware';
 @Module({
@@ -21,6 +22,7 @@ import { HeaderMiddleware } from './modules/middleware/header.middleware';
         I18nModule,
         MongoModule,
         UserModule,
+        ProductModule
     ],
     controllers: [AppController],
     providers: [

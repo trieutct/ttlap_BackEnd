@@ -1,10 +1,10 @@
 import { BaseRepository } from '@/common/base/base.repository';
-import { User, UserDocument } from '@/database/schemas/user.schema';
+import { Product, ProductDocument } from '@/database/schemas/product.schema';
 
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
-import { GetUserListQuery } from './user.interface';
+import { GetProductListQuery } from './product.interface';
 import {
     DEFAULT_FIRST_PAGE,
     DEFAULT_LIMIT_FOR_PAGINATION,
@@ -14,18 +14,18 @@ import {
     softDeleteCondition,
 } from '@/common/constants';
 import { parseMongoProjection } from '@/common/helpers/commonFunctions';
-import { UserAttributesForList } from './user.constant';
+import { ProductAttributesForList } from './product.contant';
 
 @Injectable()
-export class UserRepository extends BaseRepository<User> {
+export class ProductRepository extends BaseRepository<Product> {
     constructor(
-        @InjectModel(User.name)
-        private readonly userModel: Model<UserDocument>,
+        @InjectModel(Product.name)
+        private readonly productModel: Model<ProductDocument>,
     ) {
-        super(userModel);
+        super(productModel);
     }
 
-    async findAllAndCountUserByQuery(query: GetUserListQuery) {
+    async findAllAndCountProductByQuery(query: GetProductListQuery) {
         try {
             const {
                 keyword = '',
@@ -33,7 +33,7 @@ export class UserRepository extends BaseRepository<User> {
                 limit = +DEFAULT_LIMIT_FOR_PAGINATION,
                 orderBy = DEFAULT_ORDER_BY,
                 orderDirection = DEFAULT_ORDER_DIRECTION,
-                // name = '',
+                name = '',
             } = query;
             // console.log(keyword)
             // console.log(page)
@@ -41,7 +41,7 @@ export class UserRepository extends BaseRepository<User> {
             // console.log(orderBy)
             // console.log(orderDirection)
             // console.log(name)
-            const matchQuery: FilterQuery<User> = {};
+            const matchQuery: FilterQuery<Product> = {};
             matchQuery.$and = [
                 {
                     ...softDeleteCondition,
@@ -54,13 +54,13 @@ export class UserRepository extends BaseRepository<User> {
                 });
             }
 
-            // if (name) {
-            //     matchQuery.$and.push({
-            //         name,
-            //     });
-            // }
+            if (name) {
+                matchQuery.$and.push({
+                    name,
+                });
+            }
 
-            const [result] = await this.userModel.aggregate([
+            const [result] = await this.productModel.aggregate([
                 {
                     $addFields: {
                         id: { $toString: '$_id' },
@@ -72,7 +72,7 @@ export class UserRepository extends BaseRepository<User> {
                     },
                 },
                 {
-                    $project: parseMongoProjection(UserAttributesForList),
+                    $project: parseMongoProjection(ProductAttributesForList),
                 },
                 {
                     $facet: {
@@ -106,7 +106,7 @@ export class UserRepository extends BaseRepository<User> {
             };
         } catch (error) {
             this.logger.error(
-                'Error in UserRepository findAllAndCountUserByQuery: ' + error,
+                'Error in ProductRepository findAllAndCountProductByQuery: ' + error,
             );
             throw error;
         }
