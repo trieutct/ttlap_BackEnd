@@ -13,64 +13,64 @@ import { ProductAttributesForList } from '../product.contant';
 
 @Injectable()
 export class ProductService extends BaseService<Product, ProductRepository> {
-    constructor(private readonly userRepository: ProductRepository) {
-        super(userRepository);
+    constructor(private readonly productRepository: ProductRepository) {
+        super(productRepository);
     }
 
-    async createUser(dto: CreateProductDto) {
+    async createProduct(dto: CreateProductDto) {
         try {
             // console.log({...(dto as any)})
-            const user: SchemaCreateDocument<Product> = {
+            const product: SchemaCreateDocument<Product> = {
                 ...(dto as any),
             };
-            const res= await this.userRepository.createOne(user)
+            const res= await this.productRepository.createOne(product)
             // console.log(res)
             return res;
         } catch (error) {
-            this.logger.error('Error in UserService createUser: ' + error);
+            this.logger.error('Error in productService createproduct: ' + error);
             throw error;
         }
     }
 
-    async updateUser(id: Types.ObjectId, dto: UpdateProductDto) {
+    async updateProduct(id: Types.ObjectId, dto: UpdateProductDto) {
         try {
-            await this.userRepository.updateOneById(id, dto);
-            return await this.findUserById(id);
+            await this.productRepository.updateOneById(id, dto);
+            return await this.findProductById(id);
         } catch (error) {
-            this.logger.error('Error in UserService updateUser: ' + error);
+            this.logger.error('Error in ProductService updateProduct: ' + error);
             throw error;
         }
     }
 
-    async deleteUser(id: Types.ObjectId) {
+    async deleteProduct(id: Types.ObjectId) {
         try {
-            await this.userRepository.softDeleteOne({ _id: id });
+            await this.productRepository.softDeleteOne({ _id: id });
             return { id };
         } catch (error) {
-            this.logger.error('Error in UserService deleteUser: ' + error);
+            this.logger.error('Error in ProductService deleteProduct: ' + error);
             throw error;
         }
     }
 
-    async findUserById(
+    async findProductById(
         id: Types.ObjectId,
         attributes: (keyof Product)[] = ProductAttributesForList,
     ) {
         try {
-            return await this.userRepository.getOneById(id, attributes);
+            return await this.productRepository.getOneById(id, attributes);
         } catch (error) {
-            this.logger.error('Error in UserService findUserById: ' + error);
+            this.logger.error('Error in ProductService findProductById: ' + error);
             throw error;
         }
     }
     async findAllAndCountProductByQuery(query: GetProductListQuery) {
         try {
             const result =
-                await this.userRepository.findAllAndCountProductByQuery(query);
+                await this.productRepository.findAllAndCountProductByQuery(query);
             return result;
         } catch (error) {
             this.logger.error(
-                'Error in UserService findAllAndCountUserByQuery: ' + error,
+                'Error in ProductService findAllAndCountProductByQuery: ' + error,
             );
             throw error;
         }

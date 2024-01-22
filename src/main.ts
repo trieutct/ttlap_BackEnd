@@ -10,7 +10,7 @@ import { BooleanString } from './common/constants';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import winston, { transports } from 'winston';
 import { customFormat } from './common/helpers/commonFunctions';
-
+import * as express from 'express';
 const { combine, prettyPrint, colorize, simple } = winston.format;
 
 async function bootstrap() {
@@ -77,7 +77,7 @@ async function bootstrap() {
         const document = SwaggerModule.createDocument(app, config);
         SwaggerModule.setup('swagger', app, document);
     }
-
+    app.use('/data', express.static('data'));
     await app.listen(configService.get(ConfigKey.PORT));
 }
 bootstrap();

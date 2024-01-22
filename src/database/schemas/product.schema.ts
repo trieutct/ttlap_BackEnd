@@ -26,7 +26,7 @@ export class Product extends MongoBaseSchema {
     @Prop({ required: true, type: String })
     description: string;
     
-    @Prop({ required: true, type: String })
+    @Prop({ required: false, type: String })
     imageUrl: string;
 }
 const ProductSchema = createSchemaForClass(Product);

@@ -13,6 +13,37 @@ export class CreateProductDto {
     })
     @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
     name: string;
+
+
+    @ApiProperty({
+        type: Number,
+        default: 0,
+    })
+    @JoiValidate(Joi.number().required())
+    price: Number;
+
+    @ApiProperty({
+        type: Number,
+        default: 0,
+    })
+    @JoiValidate(Joi.number().required())
+    quantity: Number;
+    
+    @ApiProperty({
+        type: String,
+        maxLength: INPUT_TEXT_MAX_LENGTH,
+        default: '...',
+    })
+    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
+    description: string;
+    
+    @ApiProperty({
+        type: String,
+        maxLength: INPUT_TEXT_MAX_LENGTH,
+        default: '...',
+    })
+    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).optional())
+    imageUrl?: string;
 }
 
 export class UpdateProductDto {
