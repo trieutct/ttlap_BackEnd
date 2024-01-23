@@ -54,29 +54,37 @@ export class UpdateProductDto {
     })
     @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
     name: string;
+
+
+    @ApiProperty({
+        type: Number,
+        default: 0,
+    })
+    @JoiValidate(Joi.number().required())
+    price: Number;
+
+    @ApiProperty({
+        type: Number,
+        default: 0,
+    })
+    @JoiValidate(Joi.number().required())
+    quantity: Number;
     
     @ApiProperty({
         type: String,
         maxLength: INPUT_TEXT_MAX_LENGTH,
-        default: 'User name',
+        default: '...',
     })
     @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
-    username: string;
-
+    description: string;
+    
     @ApiProperty({
         type: String,
         maxLength: INPUT_TEXT_MAX_LENGTH,
-        default: '',
+        default: '...',
     })
-    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
-    password: string;
-
-    @ApiProperty({
-        type: Boolean, // Thay đổi kiểu dữ liệu thành Boolean
-        default: RoleCollection.USERS, // Giá trị mặc định cho kiểu boolean
-    })
-    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).required())
-    role: string;
+    @JoiValidate(Joi.string().trim().max(INPUT_TEXT_MAX_LENGTH).optional())
+    imageUrl?: string;
 }
 
 export class GetProductListQuery extends CommonListQuery {

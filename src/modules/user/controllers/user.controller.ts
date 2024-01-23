@@ -151,8 +151,8 @@ export class UserController extends BaseController {
             this.handleError(error);
         }
     }
-    // @Role(RoleCollection.Admin)
-    // @UseGuards(AuthGuard,RolesGuard)
+    @Role(RoleCollection.Admin)
+    @UseGuards(AuthGuard,RolesGuard)
     @ApiOperation({ summary: 'Get User list' })
     @ApiResponseError([SwaggerApiType.GET_LIST])
     @ApiResponseSuccess(getUserListSuccessResponseExample)

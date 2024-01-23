@@ -10,6 +10,7 @@ import {
     UploadedFile,
     UseInterceptors,
 } from '@nestjs/common';
+import * as fs from 'fs';
 import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
 import { HttpStatus, mongoIdSchema } from '@/common/constants';
 import {
@@ -52,12 +53,12 @@ export class ProductController extends BaseController {
     async createProduct(
         @Body(new TrimBodyPipe(), new JoiValidationPipe())
         dto: CreateProductDto,
-        @UploadedFile() file?
+        @UploadedFile() file?,
     ) {
-        console.log(dto)
+        console.log(dto);
         try {
             //console.log(dto)
-            dto.imageUrl=file!=null?`/data/${file.filename}`:'.....'
+            dto.imageUrl = file != null ? `/data/${file.filename}` : '.....';
             const result = await this.ProductService.createProduct(dto);
             return result;
         } catch (error) {
@@ -69,14 +70,18 @@ export class ProductController extends BaseController {
     @ApiResponseError([SwaggerApiType.UPDATE])
     @ApiResponseSuccess(updateProductSuccessResponseExample)
     @ApiBody({ type: UpdateProductDto })
+    @UseInterceptors(FileInterceptor('file'))
     @Patch(':id')
     async updateProduct(
         @Param('id', new JoiValidationPipe(mongoIdSchema)) id: string,
         @Body(new TrimBodyPipe(), new JoiValidationPipe())
         dto: UpdateProductDto,
+        @UploadedFile() file?,
     ) {
         try {
-            const Product = await this.ProductService.findProductById(toObjectId(id));
+            const Product = await this.ProductService.findProductById(
+                toObjectId(id),
+            );
             if (!Product) {
                 return new ErrorResponse(
                     HttpStatus.ITEM_NOT_FOUND,
@@ -87,7 +92,14 @@ export class ProductController extends BaseController {
                     }),
                 );
             }
-
+            if(file!=null)
+            {
+                const imagePath = Product.imageUrl === '' ? null : `./${Product.imageUrl}`;
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                }
+            }
+            dto.imageUrl = file != null ? `/data/${file.filename}` : Product.imageUrl;
             const result = await this.ProductService.updateProduct(
                 toObjectId(id),
                 dto,
@@ -106,7 +118,9 @@ export class ProductController extends BaseController {
         @Param('id', new JoiValidationPipe(mongoIdSchema)) id: string,
     ) {
         try {
-            const Product = await this.ProductService.findProductById(toObjectId(id));
+            const Product = await this.ProductService.findProductById(
+                toObjectId(id),
+            );
 
             if (!Product) {
                 return new ErrorResponse(
@@ -118,8 +132,15 @@ export class ProductController extends BaseController {
                     }),
                 );
             }
-
-            const result = await this.ProductService.deleteProduct(toObjectId(id));
+            // console.log(Product.imageUrl);
+            const imagePath =
+                Product.imageUrl === '' ? null : `./${Product.imageUrl}`;
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+            const result = await this.ProductService.deleteProduct(
+                toObjectId(id),
+            );
             return new SuccessResponse(result);
         } catch (error) {
             this.handleError(error);
@@ -134,7 +155,9 @@ export class ProductController extends BaseController {
         @Param('id', new JoiValidationPipe(mongoIdSchema)) id: string,
     ) {
         try {
-            const result = await this.ProductService.findProductById(toObjectId(id));
+            const result = await this.ProductService.findProductById(
+                toObjectId(id),
+            );
 
             if (!result) {
                 return new ErrorResponse(
