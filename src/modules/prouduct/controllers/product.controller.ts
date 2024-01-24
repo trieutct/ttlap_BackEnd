@@ -92,14 +92,15 @@ export class ProductController extends BaseController {
                     }),
                 );
             }
-            if(file!=null)
-            {
-                const imagePath = Product.imageUrl === '' ? null : `./${Product.imageUrl}`;
+            if (file != null) {
+                const imagePath =
+                    Product.imageUrl === '' ? null : `./${Product.imageUrl}`;
                 if (fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
                 }
             }
-            dto.imageUrl = file != null ? `/data/${file.filename}` : Product.imageUrl;
+            dto.imageUrl =
+                file != null ? `/data/${file.filename}` : Product.imageUrl;
             const result = await this.ProductService.updateProduct(
                 toObjectId(id),
                 dto,
