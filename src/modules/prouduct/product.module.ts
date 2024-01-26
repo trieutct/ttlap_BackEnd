@@ -4,6 +4,7 @@ import { ProductController } from './controllers/product.controller';
 import { ProductService } from './services/product.service';
 import { ProductRepository } from './product.repository';
 import { Product, ProductSchema } from '../../database/schemas/product.schema';
+import { CloudinaryService } from '@/common/cloudinary/cloudinary.service';
 // import { MulterModule } from '@nestjs/platform-express';
 // import { diskStorage } from 'multer';
 
@@ -32,7 +33,7 @@ import { Product, ProductSchema } from '../../database/schemas/product.schema';
         // }),
     ],
     controllers: [ProductController],
-    providers: [ProductService, ProductRepository],
+    providers: [ProductService, ProductRepository, CloudinaryService],
     exports: [ProductRepository],
 })
 export class ProductModule {}

@@ -11,7 +11,10 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import * as fs from 'fs';
-import { ErrorResponse, SuccessResponse } from '../../../common/helpers/response';
+import {
+    ErrorResponse,
+    SuccessResponse,
+} from '../../../common/helpers/response';
 import { HttpStatus, mongoIdSchema } from '../../../common/constants';
 import {
     CreateProductDto,
@@ -23,7 +26,7 @@ import {
     SwaggerApiType,
     ApiResponseSuccess,
 } from '../../../common/services/swagger.service';
-import { ApiOperation, ApiBody, ApiTags, ApiConsumes } from '@nestjs/swagger';
+import { ApiOperation, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import {
     createProductSuccessResponseExample,
@@ -38,12 +41,18 @@ import { BaseController } from '../../../common/base/base.controller';
 import { JoiValidationPipe } from '../../../common/pipe/joi.validation.pipe';
 import { ProductService } from '../services/product.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from '../../../common/cloudinary/cloudinary.service';
+
 @ApiTags('Product APIs')
 @Controller('product')
 export class ProductController extends BaseController {
-    constructor(private readonly ProductService: ProductService) {
+    constructor(
+        private readonly productService: ProductService,
+        private readonly cloudinaryService: CloudinaryService,
+    ) {
         super();
     }
+
     @ApiOperation({ summary: 'Create Product' })
     @ApiResponseError([SwaggerApiType.CREATE])
     @ApiResponseSuccess(createProductSuccessResponseExample)
@@ -55,14 +64,16 @@ export class ProductController extends BaseController {
         dto: CreateProductDto,
         @UploadedFile() file?,
     ) {
-        console.log(dto);
         try {
-            //console.log(dto)
-            dto.imageUrl = file != null ? `/data/${file.filename}` : '.....';
-            const result = await this.ProductService.createProduct(dto);
+            if (file != null) {
+                const url = await this.cloudinaryService.uploadImage(file);
+                dto.imageUrl = url;
+            }
+            const result = await this.productService.createProduct(dto);
             return result;
         } catch (error) {
             this.handleError(error);
+            // Có thể thêm hành động khác tùy thuộc vào yêu cầu của bạn, ví dụ trả về response lỗi cụ thể.
         }
     }
 
@@ -79,10 +90,10 @@ export class ProductController extends BaseController {
         @UploadedFile() file?,
     ) {
         try {
-            const Product = await this.ProductService.findProductById(
+            const product = await this.productService.findProductById(
                 toObjectId(id),
             );
-            if (!Product) {
+            if (!product) {
                 return new ErrorResponse(
                     HttpStatus.ITEM_NOT_FOUND,
                     this.translate('Product.error.notFound', {
@@ -94,14 +105,13 @@ export class ProductController extends BaseController {
             }
             if (file != null) {
                 const imagePath =
-                    Product.imageUrl === '' ? null : `./${Product.imageUrl}`;
+                    product.imageUrl === '' ? null : `./${product.imageUrl}`;
                 if (fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
                 }
+                dto.imageUrl = `/data/${file.filename}`;
             }
-            dto.imageUrl =
-                file != null ? `/data/${file.filename}` : Product.imageUrl;
-            const result = await this.ProductService.updateProduct(
+            const result = await this.productService.updateProduct(
                 toObjectId(id),
                 dto,
             );
@@ -119,11 +129,11 @@ export class ProductController extends BaseController {
         @Param('id', new JoiValidationPipe(mongoIdSchema)) id: string,
     ) {
         try {
-            const Product = await this.ProductService.findProductById(
+            const product = await this.productService.findProductById(
                 toObjectId(id),
             );
 
-            if (!Product) {
+            if (!product) {
                 return new ErrorResponse(
                     HttpStatus.ITEM_NOT_FOUND,
                     this.translate('Product.error.notFound', {
@@ -133,13 +143,13 @@ export class ProductController extends BaseController {
                     }),
                 );
             }
-            // console.log(Product.imageUrl);
+
             const imagePath =
-                Product.imageUrl === '' ? null : `./${Product.imageUrl}`;
+                product.imageUrl === '' ? null : `./${product.imageUrl}`;
             if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath);
             }
-            const result = await this.ProductService.deleteProduct(
+            const result = await this.productService.deleteProduct(
                 toObjectId(id),
             );
             return new SuccessResponse(result);
@@ -156,7 +166,7 @@ export class ProductController extends BaseController {
         @Param('id', new JoiValidationPipe(mongoIdSchema)) id: string,
     ) {
         try {
-            const result = await this.ProductService.findProductById(
+            const result = await this.productService.findProductById(
                 toObjectId(id),
             );
 
@@ -175,6 +185,7 @@ export class ProductController extends BaseController {
             this.handleError(error);
         }
     }
+
     @ApiOperation({ summary: 'Get Product list' })
     @ApiResponseError([SwaggerApiType.GET_LIST])
     @ApiResponseSuccess(getProductListSuccessResponseExample)
@@ -183,10 +194,9 @@ export class ProductController extends BaseController {
         @Query(new JoiValidationPipe())
         query: GetProductListQuery,
     ) {
-        //console.log(query)
         try {
             const result =
-                await this.ProductService.findAllAndCountProductByQuery(query);
+                await this.productService.findAllAndCountProductByQuery(query);
             return new SuccessResponse(result);
         } catch (error) {
             this.handleError(error);
