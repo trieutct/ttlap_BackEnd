@@ -1,5 +1,5 @@
-import { softDeleteCondition } from '@/common/constants';
-import { I18nKey } from '@/i18n/i18n';
+import { softDeleteCondition } from '../../common/constants';
+import { I18nKey } from '../../i18n/i18n';
 import { Inject, Logger } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import mongoose, {

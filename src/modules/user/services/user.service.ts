@@ -1,4 +1,4 @@
-import { BaseService } from '@/common/base/base.service';
+import { BaseService } from '../../../common/base/base.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import {
@@ -8,11 +8,11 @@ import {
     loginUserDto,
 } from '../user.interface';
 
-import { User } from '@/database/schemas/user.schema';
+import { User } from '../../../database/schemas/user.schema';
 import { UserRepository } from '../user.repository';
 import { UserAttributesForDetail } from '../user.constant';
 import { JwtService } from '@nestjs/jwt';
-import  {jwtConstants}  from '@/modules/auth/constants';
+import  {jwtConstants}  from '../../../modules/auth/constants';
 
 @Injectable()
 export class UserService extends BaseService<User, UserRepository> {

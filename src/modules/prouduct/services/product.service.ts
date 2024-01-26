@@ -1,4 +1,4 @@
-import { BaseService } from '@/common/base/base.service';
+import { BaseService } from '../../../common/base/base.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import {
@@ -7,7 +7,7 @@ import {
     UpdateProductDto,
 } from '../product.interface';
 
-import { Product } from '@/database/schemas/product.schema';
+import { Product } from '../../../database/schemas/product.schema';
 import { ProductRepository } from '../product.repository';
 import { ProductAttributesForList } from '../product.contant';
 

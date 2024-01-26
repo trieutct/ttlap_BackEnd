@@ -11,8 +11,8 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import * as fs from 'fs';
-import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
-import { HttpStatus, mongoIdSchema } from '@/common/constants';
+import { ErrorResponse, SuccessResponse } from '../../../common/helpers/response';
+import { HttpStatus, mongoIdSchema } from '../../../common/constants';
 import {
     CreateProductDto,
     GetProductListQuery,
@@ -22,7 +22,7 @@ import {
     ApiResponseError,
     SwaggerApiType,
     ApiResponseSuccess,
-} from '@/common/services/swagger.service';
+} from '../../../common/services/swagger.service';
 import { ApiOperation, ApiBody, ApiTags, ApiConsumes } from '@nestjs/swagger';
 
 import {
@@ -32,10 +32,10 @@ import {
     getProductListSuccessResponseExample,
     updateProductSuccessResponseExample,
 } from '../product.swagger';
-import { TrimBodyPipe } from '@/common/pipe/trim.body.pipe';
-import { toObjectId } from '@/common/helpers/commonFunctions';
-import { BaseController } from '@/common/base/base.controller';
-import { JoiValidationPipe } from '@/common/pipe/joi.validation.pipe';
+import { TrimBodyPipe } from '../../../common/pipe/trim.body.pipe';
+import { toObjectId } from '../../../common/helpers/commonFunctions';
+import { BaseController } from '../../../common/base/base.controller';
+import { JoiValidationPipe } from '../../../common/pipe/joi.validation.pipe';
 import { ProductService } from '../services/product.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('Product APIs')

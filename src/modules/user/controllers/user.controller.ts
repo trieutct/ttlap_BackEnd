@@ -9,8 +9,8 @@ import {
     Query,
     UseGuards,
 } from '@nestjs/common';
-import { ErrorResponse, SuccessResponse } from '@/common/helpers/response';
-import { HttpStatus, mongoIdSchema } from '@/common/constants';
+import { ErrorResponse, SuccessResponse } from '../../../common/helpers/response';
+import { HttpStatus, mongoIdSchema } from '../../../common/constants';
 import {
     CreateUserDto,
     GetUserListQuery,
@@ -21,7 +21,7 @@ import {
     ApiResponseError,
     SwaggerApiType,
     ApiResponseSuccess,
-} from '@/common/services/swagger.service';
+} from '../../../common/services/swagger.service';
 import { ApiOperation, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import {
@@ -31,15 +31,15 @@ import {
     getUserListSuccessResponseExample,
     updateUserSuccessResponseExample,
 } from '../user.swagger';
-import { TrimBodyPipe } from '@/common/pipe/trim.body.pipe';
-import { toObjectId } from '@/common/helpers/commonFunctions';
-import { BaseController } from '@/common/base/base.controller';
-import { JoiValidationPipe } from '@/common/pipe/joi.validation.pipe';
+import { TrimBodyPipe } from '../../../common/pipe/trim.body.pipe';
+import { toObjectId } from '../../../common/helpers/commonFunctions';
+import { BaseController } from '../../../common/base/base.controller';
+import { JoiValidationPipe } from '../../../common/pipe/joi.validation.pipe';
 import { UserService } from '../services/user.service';
-import { AuthGuard } from '@/modules/auth/auth.guard';
-import { Role } from '@/modules/decorator/roles.decorator';
-import { RolesGuard } from '@/modules/auth/role.guard';
-import { RoleCollection } from '@/database/utils/constants';
+import { AuthGuard } from '../../../modules/auth/auth.guard';
+import { Role } from '../../../modules/decorator/roles.decorator';
+import { RolesGuard } from '../../../modules/auth/role.guard';
+import { RoleCollection } from '../../../database/utils/constants';
 @ApiTags('User APIs')
 @Controller('user')
 export class UserController extends BaseController {
@@ -151,8 +151,8 @@ export class UserController extends BaseController {
             this.handleError(error);
         }
     }
-    @Role(RoleCollection.Admin)
-    @UseGuards(AuthGuard,RolesGuard)
+    // @Role(RoleCollection.Admin)
+    // @UseGuards(AuthGuard,RolesGuard)
     @ApiOperation({ summary: 'Get User list' })
     @ApiResponseError([SwaggerApiType.GET_LIST])
     @ApiResponseSuccess(getUserListSuccessResponseExample)
