@@ -14,7 +14,7 @@ import { diskStorage } from 'multer';
         ]),
         MulterModule.register({
             storage: diskStorage({
-                destination: '../data',
+                destination: '../../../data',
                 filename: (req, file, callback) => {
                     callback(
                         null,
