@@ -144,11 +144,8 @@ export class ProductController extends BaseController {
                 );
             }
 
-            const imagePath =
-                product.imageUrl === '' ? null : `./${product.imageUrl}`;
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
-            }
+            await this.cloudinaryService.deleteImage(product.imageUrl);
+
             const result = await this.productService.deleteProduct(
                 toObjectId(id),
             );

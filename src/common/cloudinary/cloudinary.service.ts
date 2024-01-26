@@ -22,4 +22,21 @@ export class CloudinaryService {
             stream.end();
         });
     }
+    async deleteImage(url: string): Promise<void> {
+        const publicId = this.getPublicIdFromUrl(url);
+        return new Promise((resolve, reject) => {
+            cloudinary.v2.uploader.destroy(publicId, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
+    private getPublicIdFromUrl(imageUrl: string): string | null {
+        const regex = /\/([^/]+?)\.(?:jpg|jpeg|png|gif|webp|svg)/;
+        const match = imageUrl.match(regex);
+        return match ? match[1] : null;
+    }
 }
