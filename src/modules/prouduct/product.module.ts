@@ -6,6 +6,7 @@ import { ProductRepository } from './product.repository';
 import { Product, ProductSchema } from '../../database/schemas/product.schema';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+
 @Module({
     imports: [
         MongooseModule.forFeature([
@@ -13,7 +14,7 @@ import { diskStorage } from 'multer';
         ]),
         MulterModule.register({
             storage: diskStorage({
-                destination: `${process.cwd()}/data`,
+                destination: './data',
                 filename: (req, file, callback) => {
                     callback(
                         null,
