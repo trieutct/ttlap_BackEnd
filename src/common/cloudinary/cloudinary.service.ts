@@ -24,14 +24,20 @@ export class CloudinaryService {
     }
     async deleteImage(url: string): Promise<void> {
         const publicId = this.getPublicIdFromUrl(url);
+        console.log('publicId   :' + publicId);
         return new Promise((resolve, reject) => {
-            cloudinary.v2.uploader.destroy(publicId, (error, result) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(result);
-                }
-            });
+            cloudinary.v2.uploader.destroy(
+                'product_NestJS/' + publicId,
+                (error, result) => {
+                    if (error) {
+                        console.log('Lỗiiiiii');
+                        reject(error);
+                    } else {
+                        console.log('Xóa thành công');
+                        resolve(result);
+                    }
+                },
+            );
         });
     }
     private getPublicIdFromUrl(imageUrl: string): string | null {

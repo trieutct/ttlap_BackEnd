@@ -10,7 +10,6 @@ import {
     UploadedFile,
     UseInterceptors,
 } from '@nestjs/common';
-import * as fs from 'fs';
 import {
     ErrorResponse,
     SuccessResponse,
@@ -62,7 +61,7 @@ export class ProductController extends BaseController {
     async createProduct(
         @Body(new TrimBodyPipe(), new JoiValidationPipe())
         dto: CreateProductDto,
-        @UploadedFile() file?,
+        @UploadedFile() file,
     ) {
         try {
             if (file != null) {
@@ -104,12 +103,11 @@ export class ProductController extends BaseController {
                 );
             }
             if (file != null) {
-                const imagePath =
-                    product.imageUrl === '' ? null : `./${product.imageUrl}`;
-                if (fs.existsSync(imagePath)) {
-                    fs.unlinkSync(imagePath);
-                }
-                dto.imageUrl = `/data/${file.filename}`;
+                await this.cloudinaryService.deleteImage(product.imageUrl);
+                const url = await this.cloudinaryService.uploadImage(file);
+                dto.imageUrl = url;
+            } else {
+                dto.imageUrl = product.imageUrl;
             }
             const result = await this.productService.updateProduct(
                 toObjectId(id),
@@ -144,8 +142,8 @@ export class ProductController extends BaseController {
                 );
             }
 
-            await this.cloudinaryService.deleteImage(product.imageUrl);
-
+            //đoạn này chưa cần vì đang là xóa mềm
+            //await this.cloudinaryService.deleteImage(product.imageUrl);
             const result = await this.productService.deleteProduct(
                 toObjectId(id),
             );
