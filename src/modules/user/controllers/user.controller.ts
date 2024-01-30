@@ -187,14 +187,13 @@ export class UserController extends BaseController {
             if (!result) {
                 return new ErrorResponse(
                     HttpStatus.ITEM_NOT_FOUND,
-                    this.translate('Username and password not found', {
+                    this.translate('Tài khoản mật khẩu không chính xác', {
                         args: {
                             dto,
                         },
                     }),
                 );
             }
-            // console.log(result)
             return result;
         } catch (error) {
             this.handleError(error);
