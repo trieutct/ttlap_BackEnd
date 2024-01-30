@@ -9,7 +9,10 @@ import {
     Query,
     UseGuards,
 } from '@nestjs/common';
-import { ErrorResponse, SuccessResponse } from '../../../common/helpers/response';
+import {
+    ErrorResponse,
+    SuccessResponse,
+} from '../../../common/helpers/response';
 import { HttpStatus, mongoIdSchema } from '../../../common/constants';
 import {
     CreateUserDto,
@@ -151,8 +154,8 @@ export class UserController extends BaseController {
             this.handleError(error);
         }
     }
-    // @Role(RoleCollection.Admin)
-    // @UseGuards(AuthGuard,RolesGuard)
+    @Role(RoleCollection.Admin)
+    @UseGuards(AuthGuard, RolesGuard)
     @ApiOperation({ summary: 'Get User list' })
     @ApiResponseError([SwaggerApiType.GET_LIST])
     @ApiResponseSuccess(getUserListSuccessResponseExample)
@@ -178,7 +181,7 @@ export class UserController extends BaseController {
         @Body(new TrimBodyPipe(), new JoiValidationPipe())
         dto: loginUserDto,
     ) {
-        // console.log(dto)
+        //console.log(dto)
         try {
             const result = await this.userService.loginUser(dto);
             if (!result) {
@@ -191,6 +194,7 @@ export class UserController extends BaseController {
                     }),
                 );
             }
+            // console.log(result)
             return result;
         } catch (error) {
             this.handleError(error);
