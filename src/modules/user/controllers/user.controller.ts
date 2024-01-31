@@ -181,7 +181,7 @@ export class UserController extends BaseController {
         @Body(new TrimBodyPipe(), new JoiValidationPipe())
         dto: loginUserDto,
     ) {
-        //console.log(dto)
+        // console.log(dto)
         try {
             const result = await this.userService.loginUser(dto);
             if (!result) {
@@ -194,7 +194,7 @@ export class UserController extends BaseController {
                     }),
                 );
             }
-            return result;
+            return new SuccessResponse(result);
         } catch (error) {
             this.handleError(error);
         }

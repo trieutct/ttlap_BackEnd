@@ -102,11 +102,9 @@ export class UserService extends BaseService<User, UserRepository> {
                 },
             );
             return {
-                data: {
-                    accessToken: access_token,
-                    refresh_token: refresh_token,
-                    expiresIn: jwtConstants.expiresIn,
-                },
+                accessToken: access_token,
+                refresh_token: refresh_token,
+                expiresIn: jwtConstants.expiresIn,
             };
         } catch (error) {
             this.logger.error('Error in UserService loginUser: ' + error);
